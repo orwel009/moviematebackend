@@ -71,6 +71,15 @@ class MovieSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError({"episodes_watched":"Episodes watched cannot exceed total_episodes."})
             except (ValueError, TypeError):
                 raise serializers.ValidationError({"episodes_watched":"Episodes watched must be an integer."})
+        
+        rating = attrs.get('rating') if 'rating' in attrs else (self.instance.rating if self.instance else None)
+        if rating is not None:
+            try:
+                rv = float(rating)
+                if rv < 1 or rv > 5:
+                    raise serializers.ValidationError({"rating": "Rating must be between 1 and 5."})
+            except (ValueError, TypeError):
+                raise serializers.ValidationError({"rating": "Rating must be a number between 1 and 5."})
 
         return attrs
 
