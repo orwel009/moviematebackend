@@ -10,7 +10,10 @@ from rest_framework.pagination import PageNumberPagination
 from .serializers import SignupSerializer, UserSerializer, MovieSerializer
 from .models import Movie
 from .permissions import IsOwnerOrReadOnly
+from django.shortcuts import get_object_or_404
 
+from .models import AdminMovie, Movie
+from .serializers import AdminMovieSerializer, MovieSerializer
 User = get_user_model()
 
 # Auth
@@ -72,3 +75,38 @@ class MovieViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user if self.request and self.request.user.is_authenticated else None
         serializer.save(user=user)
+
+
+
+class AdminMovieViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = AdminMovie.objects.all().order_by('-created_at')
+    serializer_class = AdminMovieSerializer
+    permission_classes = [permissions.AllowAny]
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def add_from_admin_view(request, pk):
+    """
+    POST /api/movies/from-admin/<pk>/
+    Copies AdminMovie(pk) into user's Movie and returns created Movie.
+    """
+    admin_item = get_object_or_404(AdminMovie, pk=pk)
+
+    payload = {
+        "title": admin_item.title,
+        "media_type": admin_item.media_type,
+        "director": admin_item.director,
+        "genre": admin_item.genre,
+        "platform": admin_item.platform,
+        "total_episodes": admin_item.total_episodes,
+        "episodes_watched": 0,
+        "status": "wishlist",
+        "rating": None,
+        "review": ""
+    }
+
+    serializer = MovieSerializer(data=payload, context={'request': request})
+    if serializer.is_valid():
+        movie = serializer.save(user=request.user)
+        return Response(MovieSerializer(movie, context={'request': request}).data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
