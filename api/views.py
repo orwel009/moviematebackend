@@ -81,6 +81,15 @@ class MovieViewSet(viewsets.ModelViewSet):
 class AdminMovieViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AdminMovie.objects.all().order_by('-created_at')
     serializer_class = AdminMovieSerializer
+
+    pagination_class = StandardResultsSetPagination
+
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['genre', 'platform', 'media_type']
+    search_fields = ['title', 'director', 'genre', 'platform']
+    ordering_fields = ['created_at', 'title', 'rating']
+    ordering = ['-created_at']
+
     permission_classes = [permissions.AllowAny]
 
 @api_view(['POST'])
