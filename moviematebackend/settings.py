@@ -26,11 +26,17 @@ SECRET_KEY = 'django-insecure-*+-@x@lxtqikjz6#=!q+)518u5c*j#)u0mc@f-gx&14dc@5u+$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+import os
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
 ]
+
+render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_host:
+    ALLOWED_HOSTS.append(render_host)
+
 
 
 REST_FRAMEWORK = {
