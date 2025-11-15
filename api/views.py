@@ -58,18 +58,15 @@ class MovieViewSet(viewsets.ModelViewSet):
     ordering_fields = ['created_at','title','rating']
     ordering = ['-created_at']
 
-    permission_classes = [IsOwnerOrReadOnly]  # keep your permission class
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         user = self.request.user
         qs = Movie.objects.all().order_by('-created_at')
         if user and user.is_authenticated:
             if user.is_staff:
-                # staff/admin can see everything
                 return qs
-            # non-staff: only their own movies
             return qs.filter(user=user)
-        # anonymous: return empty queryset
         return qs.none()
 
     def perform_create(self, serializer):
