@@ -56,7 +56,7 @@ cd moviematebackend
 ### **2. Create and activate virtual environment**
 ```bash
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+source venv/bin/activate
 ```
 
 ### **3. Install dependencies**
