@@ -2,7 +2,8 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
-from .models import Movie
+from .models import Movie, AdminMovie
+
 
 User = get_user_model()
 
@@ -37,6 +38,14 @@ class SignupSerializer(serializers.ModelSerializer):
         last_name = validated_data.get('last_name','')
         user = User.objects.create_user(username=email, email=email, password=password, first_name=first_name, last_name=last_name)
         return user
+
+
+class AdminMovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminMovie
+        fields = ['id','title','media_type','director','genre','platform','total_episodes','synopsis','poster_url','created_at']
+        read_only_fields = fields
+
 
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
