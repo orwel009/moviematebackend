@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-*+-@x@lxtqikjz6#=!q+)518u5c*j#)u0mc@f-gx&14dc@5u+$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 import os
 
 ALLOWED_HOSTS = [
@@ -37,13 +38,27 @@ render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if render_host:
     ALLOWED_HOSTS.append(render_host)
 
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
 
-render_url = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if render_url:
-    CORS_ALLOWED_ORIGINS.append(f"https://{render_url}")
+if render_host:
+    CORS_ALLOWED_ORIGINS.append(f"https://{render_host}")
+
+frontend_url = os.environ.get("FRONTEND_URL")
+if frontend_url:
+    CORS_ALLOWED_ORIGINS.append(frontend_url)
+
+
+CSRF_TRUSTED_ORIGINS = []
+
+if render_host:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{render_host}")
+
+if frontend_url:
+    CSRF_TRUSTED_ORIGINS.append(frontend_url)
+
 
 
 REST_FRAMEWORK = {
