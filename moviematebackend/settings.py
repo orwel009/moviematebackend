@@ -37,6 +37,13 @@ render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if render_host:
     ALLOWED_HOSTS.append(render_host)
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
+render_url = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_url:
+    CORS_ALLOWED_ORIGINS.append(f"https://{render_url}")
 
 
 REST_FRAMEWORK = {
