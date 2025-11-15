@@ -94,7 +94,6 @@ http://127.0.0.1:8000
 
 Your frontend will not work unless this backend is running.
 
-
 ---
 
 ## **API Endpoints Overview**
@@ -102,18 +101,37 @@ Your frontend will not work unless this backend is running.
 ### **Authentication**
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/auth/signup/` | Create user |
-| POST | `/auth/login/` | Login and get token |
-| GET | `/auth/me/` | Get current user |
+| **POST** | `/auth/signup/` | Create a new user |
+| **POST** | `/auth/login/` | Login and receive auth token |
+| **GET**  | `/auth/me/`     | Get the currently authenticated user |
 
-### **Movies / TV Shows**
+---
+
+### **User Movies (User's Personal List)**
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/movies/` | List all items |
-| POST | `/api/movies/` | Create |
-| GET | `/api/movies/<id>/` | Retrieve |
-| PATCH | `/api/movies/<id>/` | Update |
-| DELETE | `/api/movies/<id>/` | Delete |
+| **GET**    | `/movies/`           | List all movies/TV shows added by the user |
+| **POST**   | `/movies/`           | Create/add a custom movie or show to the user's list |
+| **GET**    | `/movies/<id>/`      | Retrieve a movie/show from the user's list |
+| **PATCH**  | `/movies/<id>/`      | Update user's movie/show (rating, progress, status, etc.) |
+| **DELETE** | `/movies/<id>/`      | Delete a movie/show from the user's list |
+
+---
+
+### **Admin Movies (Read-only for Users)**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| **GET** | `/admin-movies/`      | List all admin-added movies/TV shows |
+| **GET** | `/admin-movies/<id>/` | Retrieve details of an admin movie/show |
+
+---
+
+### **Add Admin Movie to User's List**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| **POST** | `/movies/from-admin/<pk>/` | Add an admin movie/show into the user's personal movie list |
+
+---
 
 ### **Filtering & Search**
 Supported query parameters for `/api/movies/`:
